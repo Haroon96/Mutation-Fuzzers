@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('--strategy', choices=list(strategies))
     parser.add_argument('--num-videos', default=30)
     parser.add_argument('--alpha', default=0.1, type=float)
-    parser.add_argument('--generations', default=1000)
+    parser.add_argument('--generations', default=500)
     return parser.parse_args()
 
 def main(args):
