@@ -29,6 +29,6 @@ if __name__ == '__main__':
                         
                 # spawn process
                 print("Starting", strategy, alpha)
-                proc = subprocess.Popen([sys.executable, 'main.py', '--strategy', strategy, '--alpha', alpha])
+                proc = subprocess.Popen([sys.executable, 'main.py', '--strategy', strategy, '--alpha', alpha, '--num-videos', '30'])
                 processes.append(proc)
                 sleep(randint(1, 5))

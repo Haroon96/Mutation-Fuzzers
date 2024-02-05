@@ -19,11 +19,13 @@ def simulate(args):
             pass
 
     # collect homepage
-    homepage = driver.get_homepage()
-
-    # save to directory
-    response = [i.videoId for i in homepage]
-    print(json.dumps(response))
+    while True:
+       try:
+           homepage = driver.get_homepage()
+           response = [i.videoId for i in homepage]
+           print('\n', json.dumps(response))
+           return
+       except: pass
 
 if __name__ == '__main__':
     simulate(sys.argv[1])
