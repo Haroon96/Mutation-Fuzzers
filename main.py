@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('--strategy', required=True, choices=list(strategies))
     parser.add_argument('--num-videos', default=30)
     parser.add_argument('--alpha', default=0.1, type=float)
-    parser.add_argument('--generations', default=500)
+    parser.add_argument('--generations', default=100)
     return parser.parse_args()
 
 def main(args):
@@ -56,6 +56,9 @@ def main(args):
 
         # get new trace
         trace = strategy.mutate(trace, args.alpha)
+        
+        # increment generation
+        generation += 1
 
 
 if __name__ == '__main__':
