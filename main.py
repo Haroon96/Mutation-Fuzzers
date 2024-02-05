@@ -13,7 +13,7 @@ DATA_DIR = os.path.join(os.getcwd(), 'data')
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument('--strategy', choices=list(strategies))
+    parser.add_argument('--strategy', required=True, choices=list(strategies))
     parser.add_argument('--num-videos', default=30)
     parser.add_argument('--alpha', default=0.1, type=float)
     parser.add_argument('--generations', default=500)
