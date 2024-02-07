@@ -38,7 +38,7 @@ if __name__ == '__main__':
         generations = str(run['generations'])
         generation = str(run['generation'])
         
-        print("Resuming", run_id, strategy, alpha)
+        print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
         proc = subprocess.Popen([sys.executable, 'main.py', 
                                  '--is-resume',
                                  '--run-id', run_id,
