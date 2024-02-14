@@ -53,6 +53,7 @@ if __name__ == '__main__':
         sleep(randint(1, 5))
 
     # wait for processes to finish
+    print('waiting for processes to end')
     while len(processes) > 0:
         for process in processes:
             if process.poll() is not None:
