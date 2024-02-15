@@ -18,6 +18,7 @@ if __name__ == '__main__':
     
     r = requests.get(f'http://lake.cs.ucdavis.edu/fuzzerapi/unfinished-runs/{gethostname()}')
     unfinished_runs = r.json()
+    print("# of unfinished runs", len(unfinished_runs))
     
     for run in unfinished_runs:
         # sleep if max processes
@@ -56,6 +57,7 @@ if __name__ == '__main__':
         sleep(randint(1, 5))
 
     # wait for processes to finish
+    print('waiting for processes to end')
     while len(processes) > 0:
         for process in processes:
             if process.poll() is not None:
