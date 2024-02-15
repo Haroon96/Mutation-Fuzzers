@@ -39,7 +39,6 @@ if __name__ == '__main__':
         generations = str(run['generations'])
         generation = str(run['generation'])
         
-        print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
         resume_args = [
             '--is-resume',
             '--run-id', run_id,
@@ -51,7 +50,9 @@ if __name__ == '__main__':
         ]
         if alpha is not None:
             resume_args.extend(['--alpha', str(alpha)])
+            continue
 
+        print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
         proc = subprocess.Popen([sys.executable, 'main.py', *resume_args])
         processes.append(proc)
         sleep(randint(1, 15))
