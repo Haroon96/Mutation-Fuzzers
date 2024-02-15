@@ -18,6 +18,7 @@ if __name__ == '__main__':
     
     r = requests.get(f'http://lake.cs.ucdavis.edu/fuzzerapi/unfinished-runs/{gethostname()}')
     unfinished_runs = r.json()
+    unfinished_runs = [i for i in unfinished_runs if i['alpha'] is None]
     print("# of unfinished runs", len(unfinished_runs))
     
     for run in unfinished_runs:
@@ -50,7 +51,6 @@ if __name__ == '__main__':
         ]
         if alpha is not None:
             resume_args.extend(['--alpha', str(alpha)])
-            continue
 
         print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
         proc = subprocess.Popen([sys.executable, 'main.py', *resume_args])
