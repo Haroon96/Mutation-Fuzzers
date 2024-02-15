@@ -30,4 +30,4 @@ if __name__ == '__main__':
             print("Starting", strategy)
             proc = subprocess.Popen([sys.executable, 'main.py', '--strategy', strategy, '--num-videos', '30'])
             processes.append(proc)
-            sleep(randint(1, 5))
+            sleep(randint(1, 15))
