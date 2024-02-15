@@ -9,7 +9,7 @@ class Random(Strategy):
     def mutate(self, trace, alpha):
         mutated_trace = trace[:]
         n = len(mutated_trace)
-        ss = int(n * alpha)
+        ss = 1 if alpha is None else int(n * alpha)
         sample = self.data_gen.sample_videos(ss)
         idx = choices(range(n), k=ss)
         for i, j in enumerate(idx):

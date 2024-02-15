@@ -32,23 +32,26 @@ if __name__ == '__main__':
         # spawn process
         run_id = run['run_id']
         strategy = run['strategy']
-        alpha = str(run['alpha'])
+        alpha = run['alpha']
         num_videos = str(run['num_videos'])
         trace = run['training']
         generations = str(run['generations'])
         generation = str(run['generation'])
         
         print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
-        proc = subprocess.Popen([sys.executable, 'main.py', 
-                                 '--is-resume',
-                                 '--run-id', run_id,
-                                 '--strategy', strategy, 
-                                 '--alpha', alpha, 
-                                 '--num-videos', num_videos,
-                                 '--generations', generations,
-                                 '--initial-trace', trace,
-                                 '--initial-generation', generation
-                                 ])
+        args = [
+            '--is-resume',
+            '--run-id', run_id,
+            '--strategy', strategy, 
+            '--num-videos', num_videos,
+            '--generations', generations,
+            '--initial-trace', trace,
+            '--initial-generation', generation
+        ]
+        if alpha is not None:
+            args.extend(['--alpha', str(alpha)])
+
+        proc = subprocess.Popen([sys.executable, 'main.py', *args])
         processes.append(proc)
         sleep(randint(1, 5))
 

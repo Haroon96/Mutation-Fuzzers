@@ -15,20 +15,19 @@ if __name__ == '__main__':
     processes = []
 
     while True:
-        for alpha in ['0.1', '0.2', '0.3', '0.5']:
-            for strategy in ['greedy', 'random']:
+        for strategy in ['greedy', 'random']:
+            
+            # sleep if max processes
+            while len(processes) >= args.max_parallel:
+                sleep(args.wait_time * 60)
                 
-                # sleep if max processes
-                while len(processes) >= args.max_parallel:
-                    sleep(args.wait_time * 60)
+                # find and remove finished processes
+                for process in processes:
+                    if process.poll() is not None:
+                        processes.remove(process)
                     
-                    # find and remove finished processes
-                    for process in processes:
-                        if process.poll() is not None:
-                            processes.remove(process)
-                        
-                # spawn process
-                print("Starting", strategy, alpha)
-                proc = subprocess.Popen([sys.executable, 'main.py', '--strategy', strategy, '--alpha', alpha, '--num-videos', '30'])
-                processes.append(proc)
-                sleep(randint(1, 5))
+            # spawn process
+            print("Starting", strategy)
+            proc = subprocess.Popen([sys.executable, 'main.py', '--strategy', strategy, '--num-videos', '30'])
+            processes.append(proc)
+            sleep(randint(1, 5))
