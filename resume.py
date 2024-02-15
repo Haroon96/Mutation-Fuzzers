@@ -40,7 +40,7 @@ if __name__ == '__main__':
         generation = str(run['generation'])
         
         print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
-        args = [
+        resume_args = [
             '--is-resume',
             '--run-id', run_id,
             '--strategy', strategy, 
@@ -50,11 +50,11 @@ if __name__ == '__main__':
             '--initial-generation', generation
         ]
         if alpha is not None:
-            args.extend(['--alpha', str(alpha)])
+            resume_args.extend(['--alpha', str(alpha)])
 
-        proc = subprocess.Popen([sys.executable, 'main.py', *args])
+        proc = subprocess.Popen([sys.executable, 'main.py', *resume_args])
         processes.append(proc)
-        sleep(randint(1, 5))
+        sleep(randint(1, 15))
 
     # wait for processes to finish
     print('waiting for processes to end')
