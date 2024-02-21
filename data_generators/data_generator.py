@@ -4,3 +4,7 @@ class DataGenerator:
     
     def sample_bugs(self, n):
         pass
+    
+    def sample_metadata(self, n):
+        pass
+    
