@@ -18,6 +18,7 @@ if __name__ == '__main__':
     
     r = requests.get(f'http://lake.cs.ucdavis.edu/fuzzerapi/unfinished-runs/{gethostname()}')
     unfinished_runs = r.json()
+    unfinished_runs = [i for i in unfinished_runs if i['alpha'] is None]
     print("# of unfinished runs", len(unfinished_runs))
     
     for run in unfinished_runs:
@@ -39,8 +40,7 @@ if __name__ == '__main__':
         generations = str(run['generations'])
         generation = str(run['generation'])
         
-        print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
-        args = [
+        resume_args = [
             '--is-resume',
             '--run-id', run_id,
             '--strategy', strategy, 
@@ -50,11 +50,12 @@ if __name__ == '__main__':
             '--initial-generation', generation
         ]
         if alpha is not None:
-            args.extend(['--alpha', str(alpha)])
+            resume_args.extend(['--alpha', str(alpha)])
 
-        proc = subprocess.Popen([sys.executable, 'main.py', *args])
+        print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
+        proc = subprocess.Popen([sys.executable, 'main.py', *resume_args])
         processes.append(proc)
-        sleep(randint(1, 5))
+        sleep(randint(1, 15))
 
     # wait for processes to finish
     print('waiting for processes to end')
