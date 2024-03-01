@@ -4,8 +4,8 @@ import requests
 class YouTubeVideoGenerator(DataGenerator):
     
     def __init__(self):
-        # self.api_url = 'http://lake.cs.ucdavis.edu/fuzzerapi'
-        self.api_url = 'http://localhost:5050'
+        self.api_url = 'http://lake.cs.ucdavis.edu/fuzzerapi'
+        # self.api_url = 'http://localhost:5050'
     
     def sample_videos(self, n):
         r = requests.get(f'{self.api_url}/sample-videos/{n}')
