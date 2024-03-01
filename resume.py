@@ -18,7 +18,7 @@ if __name__ == '__main__':
     
     r = requests.get(f'http://lake.cs.ucdavis.edu/fuzzerapi/unfinished-runs/{gethostname()}')
     unfinished_runs = r.json()
-    unfinished_runs = [i for i in unfinished_runs if i['alpha'] is None]
+    unfinished_runs = [i for i in unfinished_runs if float(i['alpha']) == 0.5]
     print("# of unfinished runs", len(unfinished_runs))
     
     for run in unfinished_runs:
