@@ -5,3 +5,4 @@ tmux kill-session -t fuzzer
 tmux new -d -s fuzzer
 tmux send-keys -t fuzzer 'conda activate fuzzer' C-m
 tmux send-keys -t fuzzer 'python resume.py -wt 5 -mp 50' C-m
+tmux send-keys -t fuzzer 'python driver.py -wt 5 -mp 50' C-m
