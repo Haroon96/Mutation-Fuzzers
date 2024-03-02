@@ -31,4 +31,4 @@ class Critic(nn.Module):
         x = F.relu(x)
         x = self.linear2(x)
         x = F.relu(x)
-        return self.critic(x)
+        return self.critic(x).view(-1)

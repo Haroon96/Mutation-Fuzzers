@@ -25,33 +25,42 @@ def train():
     
     # run episodes
     for ep in range(500):
+        env.reset()
+        values = []
+        rewards = []
+
+        # simulate iteration
+        is_done = False
+        while not env.is_done():
+            state = np.mean(env.state, axis=0)
+            state = torch.from_numpy(state)
+            action = actor(state).detach()
+            next_state, _, done = env.simulate_step(action)
         
-        # run episodes
-        # while not env.is_done():
-        #     state = np.mean(env.state, axis=0)
-        #     state = torch.from_numpy(state)
-        #     action = actor(state).detach()
-        #     env.step(action)
-        
-        with open('rl_fuzzer/data/sample.pickle', 'rb') as f:
-            env.states, env.state_videos, env.rewards, env.actions, env.next_states = pickle.load(f)
+        # with open('rl_fuzzer/data/sample.pickle', 'rb') as f:
+        #     env.states, env.state_videos, env.rewards, env.actions, env.next_states = pickle.load(f)
             
+        # env.dones = ([0] * len(env.states))
+        # env.dones[-1] = 1
+        # env.dones = np.array(env.dones)
+
         # update actor-critic
-        if discount_rewards:
-            td_target = torch.tensor([0] + env.rewards)
-        else:
-            next_states = np.mean(env.next_states, axis=1)
-            next_states = torch.from_numpy(next_states)
-            td_target = env.rewards + gamma*critic(next_states)*(1-env.dones)
+        # if discount_rewards:
+        #     td_target = torch.tensor([0] + env.rewards)
+        # else:
+        next_states = np.mean(env.next_states, axis=1)
+        next_states = torch.from_numpy(next_states)
+        td_target = env.rewards + gamma*critic(next_states)*(1-env.dones)
+
         states = np.mean(env.states, axis=1)
         states = torch.from_numpy(states)
         value = critic(states)
         print(td_target.shape, value.shape)
-        advantage = td_target - value[0]
+        advantage = td_target - value
         
         # actor
-        states = np.mean(env.states, axis=1)
-        states = torch.from_numpy(states)
+        # states = np.mean(env.states, axis=1)
+        # states = torch.from_numpy(states)
         logit = actor(states)
         prob = F.softmax(logit, 0)
         log_prob = F.log_softmax(logit, 0)
