@@ -14,7 +14,7 @@ def simulate(args):
     # start watching videos
     for video in training:
         try:
-            driver.play('https://youtube.com/watch?v=' + video, duration=30)
+            driver.play('https://youtube.com/watch?v=' + video, duration=5)
         except:
             pass
 
