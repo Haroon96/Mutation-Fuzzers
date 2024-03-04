@@ -12,7 +12,7 @@ import pickle
 def train():
     # setup generator and env
     data_gen = YouTubeVideoGenerator()
-    env = YouTubeEnv(data_gen=data_gen, num_videos=10, max_gens=10)
+    env = YouTubeEnv(data_gen=data_gen, num_videos=2, max_gens=10)
     actor = Actor()
     critic = Critic()
     
@@ -27,7 +27,10 @@ def train():
     
     # run episodes
     for ep in range(500):
+        actor.zero_grad()
+        critic.zero_grad()
         env.reset()
+
         values = []
         rewards = []
         states = []
@@ -38,7 +41,7 @@ def train():
         is_done = False
 
         while not is_done:
-            state = np.mean(env.embed_state(), axis=0)
+            state = env.embed_state()
             state = torch.from_numpy(state)
             action = actor(state).detach().numpy()
             value = critic(state).detach().numpy()
