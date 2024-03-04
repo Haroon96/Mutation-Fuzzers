@@ -30,7 +30,10 @@ def train():
 
         print("Episode", ep)
 
+        actor.zero_grad()
+        critic.zero_grad()
         env.reset()
+
         values = []
         rewards = []
         states = []
@@ -42,7 +45,7 @@ def train():
 
         is_done = False
         while not is_done:
-            state = np.mean(env.embed_state(), axis=0)
+            state = env.embed_state()
             state = torch.from_numpy(state)
             action = actor(state).detach().numpy()
             value = critic(state).detach().numpy()
