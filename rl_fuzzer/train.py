@@ -12,7 +12,7 @@ import pickle
 def train():
     # setup generator and env
     data_gen = YouTubeVideoGenerator()
-    env = YouTubeEnv(data_gen=data_gen, num_videos=10, max_gens=10)
+    env = YouTubeEnv(data_gen=data_gen, num_videos=30, max_gens=50)
     actor = Actor()
     critic = Critic()
     
@@ -27,6 +27,9 @@ def train():
     
     # run episodes
     for ep in range(500):
+
+        print("Episode", ep)
+
         env.reset()
         values = []
         rewards = []
@@ -35,8 +38,9 @@ def train():
         dones = []
 
         # simulate iteration
-        is_done = False
+        print("Simulating mutations")
 
+        is_done = False
         while not is_done:
             state = np.mean(env.embed_state(), axis=0)
             state = torch.from_numpy(state)
@@ -49,6 +53,8 @@ def train():
             dones.append(is_done)
         
         # simulate sessions
+        print("Running sock puppets")
+
         futures = []
         with ThreadPoolExecutor(max_workers=50) as executor:
             for state in states:
@@ -58,6 +64,8 @@ def train():
         recommendations = [future.result() for future in futures]
 
         # compute rewards
+        print("Computing rewards")
+
         bugs = set()
         for recs in recommendations:
             r = [rec for rec in recs if is_bug(rec) and rec not in bugs]
@@ -69,6 +77,8 @@ def train():
         # if discount_rewards:
         #     td_target = torch.tensor([0] + env.rewards)
         # else:
+        print("Updating actor and critic")
+
         dones = np.array([dones]).T.astype(int)
         values = np.array(values)
         rewards = np.array([rewards]).T
@@ -100,6 +110,7 @@ def train():
         critic_loss.backward()
         critic_optim.step()
 
+        print("Saving model")
         torch.save(actor.state_dict(), f'rl_fuzzer/saved_weights/actor_{ep}.weights')
         torch.save(critic.state_dict(), f'rl_fuzzer/saved_weights/critic_{ep}.weights')
 

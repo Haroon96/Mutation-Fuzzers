@@ -45,7 +45,7 @@ class YouTubeEnv:
         i = 0
         while len(self.state) < self.num_videos:
             video = sample[i]
-            if (emb := embed(video['title'])) is not None:
+            if video['title'] is not None and (emb := embed(video['title'])) is not None:
                 self.state.append(video['video_id'])
                 self.video_embeddings[video['video_id']] = emb
             i += 1

@@ -1,7 +1,7 @@
 import requests
 
 def get_toxicity(vId):
-    r = requests.get(f'http://localhost:5050/perspective/{vId}')
+    r = requests.get(f'http://lake.cs.ucdavis.edu/fuzzerapi/perspective/{vId}')
     try:
         return r.json()['toxicity']
     except Exception as e: 

@@ -7,6 +7,7 @@ from strategies import strategies, Strategy
 import sock_puppets.api as env
 from data_generators.youtube_data_generator import YouTubeVideoGenerator
 from socket import gethostname
+import requests
 
 # default directories
 DATA_DIR = os.path.join(os.getcwd(), 'data')
@@ -14,6 +15,7 @@ DATA_DIR = os.path.join(os.getcwd(), 'data')
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--strategy', required=True, choices=list(strategies))
+    parser.add_argument('--strategy-params')
     parser.add_argument('--num-videos', default=30, type=int)
     parser.add_argument('--alpha', default=None, type=float)
     parser.add_argument('--generations', default=100, type=int)
@@ -34,7 +36,10 @@ def main(args):
     data_gen = YouTubeVideoGenerator()
 
     # pick strategy
-    strategy: Strategy = strategies[args.strategy](data_gen)
+    strategy_params = [data_gen]
+    if args.strategy_params:
+        strategy_params.extend(args.strategy_params.split(','))
+    strategy: Strategy = strategies[args.strategy](*strategy_params)
 
     # check if resuming an older run or starting new
     if args.is_resume:
@@ -48,46 +53,42 @@ def main(args):
         generation = 0
 
     # create mutations
-    traces = []
+    trace_arr = []
+    generation_arr = []
     while generation < args.generations:
         # get new trace
         trace = strategy.mutate(trace, args.alpha)
-        traces.append(trace)
+        trace_arr.append(trace)
+        generation_arr.append(generation)
+        generation += 1
 
     # run sock puppets
     futures = []
     with ThreadPoolExecutor(max_workers=50) as executor:
-        for trace in traces:
+        for trace in trace_arr:
             futures.append(executor.submit(get_recommendations, trace))
 
     # get rewards
-    recommendations = [future.result() for future in futures]
+    recommendations_arr = [future.result() for future in futures]
 
-    
-
+    # upload data
+    for gen, tr, recs in zip(generation_arr, trace_arr, recommendations_arr):
         
-
-        # run trace
-        # recommendations = env.api(trace, 'youtube.py')
-
         # post data
         post_data = dict(
             run_id=run_id,
-            generation=generation,
+            generation=gen,
             strategy=args.strategy,
             alpha=args.alpha,
             num_videos=args.num_videos,
             generations=args.generations,
-            training=trace,
-            recommendations=None
+            strategy_params=args.strategy_params,
+            training=tr,
+            recommendations=recs
         )
 
         # send data to server
-        # requests.post(f'http://lake.cs.ucdavis.edu/fuzzerapi/process-data/{gethostname()}', data=json.dumps(post_data))
-
-        
-        # increment generation
-        generation += 1
+        requests.post(f'http://lake.cs.ucdavis.edu/fuzzerapi/process-data/{gethostname()}', data=json.dumps(post_data))
 
 
 if __name__ == '__main__':
