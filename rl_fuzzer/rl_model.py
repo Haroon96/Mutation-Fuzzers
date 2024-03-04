@@ -1,13 +1,16 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 class Actor(nn.Module):
-    def __init__(self):
+    def __init__(self, weights=None):
         super().__init__()
         self.linear1 = nn.Linear(300, 128)
         self.linear2 = nn.Linear(128, 64)
         self.linear3 = nn.Linear(64, 128)
         self.actor = nn.Linear(128, 300)
+        if weights:
+            self.load_state_dict(torch.load(weights))
 
     def forward(self, x):
         x = self.linear1(x)

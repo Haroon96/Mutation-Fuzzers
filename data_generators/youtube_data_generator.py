@@ -18,3 +18,7 @@ class YouTubeVideoGenerator(DataGenerator):
     def sample_bugs(self, n):
         r = requests.get(f'{self.api_url}/sample-toxic-videos/{n}')
         return r.json()
+    
+    def get_metadata(self, video_id):
+        r = requests.get(f'{self.api_url}/metadata/{video_id}')
+        return r.json()

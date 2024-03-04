@@ -8,3 +8,5 @@ class DataGenerator:
     def sample_metadata(self, n):
         pass
     
+    def get_metadata(self, n):
+        pass
