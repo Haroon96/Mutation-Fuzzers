@@ -53,7 +53,7 @@ if __name__ == '__main__':
             resume_args.extend(['--alpha', str(alpha)])
 
         print("Resuming", run_id, strategy, alpha, num_videos, f'{generation}/{generations}')
-        proc = subprocess.Popen([sys.executable, 'main.py', *resume_args])
+        proc = subprocess.Popen([sys.executable, 'concurrent-main.py', *resume_args])
         processes.append(proc)
         sleep(randint(1, 15))
 
