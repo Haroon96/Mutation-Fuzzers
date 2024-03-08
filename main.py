@@ -14,6 +14,7 @@ DATA_DIR = os.path.join(os.getcwd(), 'data')
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--strategy', required=True, choices=list(strategies))
+    parser.add_argument('--strategy-params')
     parser.add_argument('--num-videos', default=30, type=int)
     parser.add_argument('--alpha', default=None, type=float)
     parser.add_argument('--generations', default=100, type=int)
@@ -29,7 +30,10 @@ def main(args):
     data_gen = YouTubeVideoGenerator()
 
     # pick strategy
-    strategy: Strategy = strategies[args.strategy](data_gen)
+    strategy_params = [data_gen]
+    if args.strategy_params:
+        strategy_params.extend(args.strategy_params.split(','))
+    strategy: Strategy = strategies[args.strategy](*strategy_params)
 
     # check if resuming an older run or starting new
     if args.is_resume:
