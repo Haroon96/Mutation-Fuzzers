@@ -8,6 +8,7 @@ import sock_puppets.api as env
 from data_generators.youtube_data_generator import YouTubeVideoGenerator
 from socket import gethostname
 import requests
+from time import sleep
 
 # default directories
 DATA_DIR = os.path.join(os.getcwd(), 'data')
@@ -28,7 +29,7 @@ def parse_args():
 def get_recommendations(trace):
     while True:
         try: return env.api(trace, 'youtube.py')
-        except: continue
+        except: sleep(60)
 
 def main(args):
     
