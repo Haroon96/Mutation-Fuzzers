@@ -6,8 +6,11 @@ from data_generators.youtube_data_generator import YouTubeVideoGenerator
 import torch
 import torch.nn.functional as F
 from concurrent.futures import ThreadPoolExecutor
-import pickle
+from datetime import datetime
 
+def get_date():
+    now = datetime.now()
+    return datetime.strftime(now, '%Y%m%d')
 
 def train():
     # setup generator and env
@@ -103,8 +106,8 @@ def train():
         critic_loss.backward()
         critic_optim.step()
 
-        torch.save(actor.state_dict(), f'rl_fuzzer/saved_weights/actor_{ep}.weights')
-        torch.save(critic.state_dict(), f'rl_fuzzer/saved_weights/critic_{ep}.weights')
+        torch.save(actor.state_dict(), f'rl_fuzzer/saved_weights/actor_ep{ep}_{get_date()}.weights')
+        torch.save(critic.state_dict(), f'rl_fuzzer/saved_weights/critic_ep{ep}_{get_date()}.weights')
 
         
         #     # prob = F.softmax(logit, 1)
