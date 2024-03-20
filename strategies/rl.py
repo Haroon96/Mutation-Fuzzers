@@ -24,7 +24,7 @@ class RL(Strategy):
 
     def mutate(self, trace, alpha):
         titles = [self.get_title(i) for i in trace]
-        state = np.mean([embed(i) for i in titles], axis=0).astype(np.float32)
+        state = np.array([embed(i) for i in titles]).astype(np.float32)
         state = torch.from_numpy(state)
         n = len(trace)
         k = int(alpha * n)

@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import os
 from uuid import uuid4
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 import json
 from strategies import strategies, Strategy
 import sock_puppets.api as env
@@ -46,7 +46,6 @@ def main(args):
     if args.is_resume:
         run_id = args.run_id
         trace = json.loads(args.initial_trace)
-        trace = strategy.mutate(trace, args.alpha)
         generation = args.initial_generation + 1
     else:
         run_id = str(uuid4())[:8]
@@ -56,16 +55,17 @@ def main(args):
     # create mutations
     trace_arr = []
     generation_arr = []
-    while generation < args.generations:
+    max_generations = min(generation + 10, args.generations)
+    while generation < max_generations:
         # get new trace
         trace = strategy.mutate(trace, args.alpha)
-        trace_arr.append(trace)
+        trace_arr.append(trace) 
         generation_arr.append(generation)
         generation += 1
 
     # run sock puppets
     futures = []
-    with ThreadPoolExecutor(max_workers=50) as executor:
+    with ProcessPoolExecutor(max_workers=10) as executor:
         for trace in trace_arr:
             futures.append(executor.submit(get_recommendations, trace))
 

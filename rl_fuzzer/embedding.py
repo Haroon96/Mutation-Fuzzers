@@ -18,6 +18,7 @@ def cosine_similarity(v1, v2):
     return 1 - spatial.distance.cosine(v1, v2)
 
 def embed(x):
+    x = str(x)
     x = preprocess(x)
     if x == '':
         return np.zeros((300,)).astype(np.float32)

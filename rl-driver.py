@@ -21,7 +21,7 @@ if __name__ == '__main__':
     weights = natsorted(os.listdir(weight_dir))
     while True:
         for w in weights:
-            if not w.startswith('actor'):
+            if not w.startswith('actor') or not '74.weights' in w:
                 continue
             
             # sleep if max processes
